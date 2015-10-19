@@ -299,6 +299,30 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("costhetaV"             , &costhetaV             );
   BabyTree->Branch("x1V"                   , &x1V                   );
   BabyTree->Branch("x2V"                   , &x2V                   );
+
+  BabyTree->Branch("genps_genjets_p4", &genps_genjets_p4);
+
+  BabyTree->Branch("gen_els_n", &gen_els_n);
+  BabyTree->Branch("gen_els_p4", &gen_els_p4);
+  BabyTree->Branch("gen_els_reco_p4", &gen_els_reco_p4);
+  BabyTree->Branch("gen_els_mother_id", &gen_els_mother_id);
+  BabyTree->Branch("gen_els_grandma_id", &gen_els_grandma_id);
+  BabyTree->Branch("gen_els_reco_id", &gen_els_reco_id);
+  BabyTree->Branch("gen_els_reco_iso", &gen_els_reco_iso);
+
+  BabyTree->Branch("gen_mus_n", &gen_mus_n);
+  BabyTree->Branch("gen_mus_p4", &gen_mus_p4);
+  BabyTree->Branch("gen_mus_reco_p4", &gen_mus_reco_p4);
+  BabyTree->Branch("gen_mus_mother_id", &gen_mus_mother_id);
+  BabyTree->Branch("gen_mus_grandma_id", &gen_mus_grandma_id);
+  BabyTree->Branch("gen_mus_reco_id", &gen_mus_reco_id);
+  BabyTree->Branch("gen_mus_reco_iso", &gen_mus_reco_iso);
+
+  BabyTree->Branch("gen_taus_n", &gen_taus_n);
+  BabyTree->Branch("gen_taus_p4", &gen_taus_p4);
+  BabyTree->Branch("gen_taus_decaymode", &gen_taus_decaymode);
+  BabyTree->Branch("gen_taus_mother_id", &gen_taus_mother_id);
+  BabyTree->Branch("gen_taus_grandma_id", &gen_taus_grandma_id);
   
   //Print warning!
   cout << "Careful!! Path is " << path << endl;
@@ -527,6 +551,31 @@ void babyMaker::InitBabyNtuple(){
     trueNumInt.clear();
     nPUvertices.clear(); 
     nGoodVertices = 0; 
+
+    gen_els_n = -1.;
+    gen_mus_n = -1.;
+    gen_taus_n = -1.;
+    
+    gen_els_p4.clear();
+    gen_els_reco_p4.clear();
+    gen_els_mother_id.clear();
+    gen_els_grandma_id.clear();
+    gen_els_reco_id.clear();
+    gen_els_reco_iso.clear();
+    
+    gen_mus_p4.clear();
+    gen_mus_reco_p4.clear();
+    gen_mus_mother_id.clear();
+    gen_mus_grandma_id.clear();
+    gen_mus_reco_id.clear();
+    gen_mus_reco_iso.clear();
+    
+    gen_taus_p4.clear();
+    gen_taus_decaymode.clear();
+    gen_taus_mother_id.clear();
+    gen_taus_grandma_id.clear();
+    
+    genps_genjets_p4.clear();
 } 
 
 //Main function
@@ -717,6 +766,102 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
     genps_id_mother = tas::genps_id_mother();
     genps_status = tas::genps_status(); 
     genps_id_grandma = tas::genps_id_simplegrandma(); 
+
+    genps_genjets_p4 = cms3.genjets_p4NoMuNoNu();
+
+    for (int i=0; i<cms3.genps_id().size(); i++) {
+      
+      
+      if (cms3.genps_fromHardProcessBeforeFSR().at(i) && TMath::Abs(cms3.genps_id().at(i)) == 11) {
+	gen_els_p4.push_back(cms3.genps_p4().at(i));
+	gen_els_mother_id.push_back(cms3.genps_id_simplemother().at(i));
+	gen_els_grandma_id.push_back(cms3.genps_id_simplegrandma().at(i));
+	
+	int reco_idx = -1;
+	float min_dr = 9999999.;
+	for (uint j=0; j<cms3.els_p4().size(); j++) {
+	  float DR = ROOT::Math::VectorUtil::DeltaR(cms3.els_p4().at(j), cms3.genps_p4().at(i));
+	  if (DR < min_dr) {
+	    min_dr = DR;
+	    reco_idx = j;
+	  }
+	}
+	if (min_dr > 0.1) reco_idx = -1;
+	
+	if (reco_idx > -1) {
+	  gen_els_reco_p4.push_back(cms3.els_p4().at(reco_idx));
+	  gen_els_reco_id.push_back(isTightElectronPOGspring15noIso_v1(reco_idx));
+	  gen_els_reco_iso.push_back(isTightElectronPOGspring15_v1(reco_idx));
+	} else {
+	  gen_els_reco_p4.push_back(LorentzVector(0,0,0,0));
+	  gen_els_reco_id.push_back(false);
+	  gen_els_reco_iso.push_back(false);
+	}	  
+	gen_els_n = gen_els_p4.size();
+      }
+      
+      else if (cms3.genps_fromHardProcessBeforeFSR().at(i) && TMath::Abs(cms3.genps_id().at(i)) == 13) {
+	gen_mus_p4.push_back(cms3.genps_p4().at(i));
+	gen_mus_mother_id.push_back(cms3.genps_id_simplemother().at(i));
+	gen_mus_grandma_id.push_back(cms3.genps_id_simplegrandma().at(i));
+
+	int reco_idx = -1;
+	float min_dr = 9999999.;
+	for (uint j=0; j<cms3.mus_p4().size(); j++) {
+	  float DR = ROOT::Math::VectorUtil::DeltaR(cms3.mus_p4().at(j), cms3.genps_p4().at(i));
+	    if (DR < min_dr) {
+	      min_dr = DR;
+	      reco_idx = j;
+	    }
+	}
+	if (min_dr > 0.1) reco_idx = -1;
+	
+	if (reco_idx > -1) {
+	    gen_mus_reco_p4.push_back(cms3.mus_p4().at(reco_idx));
+	    gen_mus_reco_id.push_back(isTightMuonPOG(reco_idx) && TMath::Abs(mus_dxyPV().at(reco_idx)) < 0.05 && TMath::Abs(mus_dzPV().at(reco_idx)) < 0.1);
+	    gen_mus_reco_iso.push_back(isTightMuonPOG(reco_idx) && TMath::Abs(mus_dxyPV().at(reco_idx)) < 0.05 && TMath::Abs(mus_dzPV().at(reco_idx)) < 0.1 && muRelIso04DB(reco_idx) > 0.12);
+	} else {
+	  gen_mus_reco_p4.push_back(LorentzVector(0,0,0,0));
+	  gen_mus_reco_id.push_back(false);
+	  gen_mus_reco_iso.push_back(false);
+	}	  
+	gen_mus_n = gen_mus_p4.size();
+      }
+      
+      else if (cms3.genps_fromHardProcessBeforeFSR().at(i) && TMath::Abs(cms3.genps_id().at(i)) == 15) {
+	
+	gen_taus_p4.push_back(cms3.genps_p4().at(i));
+	gen_taus_mother_id.push_back(cms3.genps_id_simplemother().at(i));
+	gen_taus_grandma_id.push_back(cms3.genps_id_simplegrandma().at(i));
+	
+	int lastcopy_idx = i;
+	bool isLastCopy = cms3.genps_isLastCopy().at(i);
+	while (!isLastCopy) {
+	  for (int j=0; j<cms3.genps_id().size(); j++) {
+	    if (cms3.genps_id().at(j) == cms3.genps_id().at(lastcopy_idx) && cms3.genps_idx_simplemother().at(j) == lastcopy_idx) {
+	      lastcopy_idx = j;
+	      isLastCopy = cms3.genps_isLastCopy().at(j);
+	      break;
+	    }
+	  }
+	}
+	
+	int thisDecay = 0;
+	for (int j=0; j<cms3.genps_id().size(); j++) {
+	  if (!cms3.genps_isDirectHardProcessTauDecayProductFinalState().at(j)) continue;
+	  if (cms3.genps_idx_simplemother().at(j) != lastcopy_idx) continue;
+	  if (cms3.genps_charge().at(j) == 0) continue;
+	  if (TMath::Abs(cms3.genps_id().at(j)) == 11 || TMath::Abs(cms3.genps_id().at(j)) == 13) {
+	    thisDecay = cms3.genps_id().at(j);
+	    break;
+	  } else {
+	    thisDecay++;
+	  }
+	}
+	gen_taus_decaymode.push_back(thisDecay);
+	gen_taus_n = gen_taus_p4.size();
+      }
+    }
   }
   
   //Determine and save jet and b-tag variables

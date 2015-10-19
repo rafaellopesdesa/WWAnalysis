@@ -299,6 +299,29 @@ class babyMaker {
     vector <int> genps_id_mother;
     vector <int> genps_status;
     vector <int> genps_id_grandma;
+    vector <LorentzVector> genps_genjets_p4;
+
+    int gen_els_n;
+    vector<LorentzVector> gen_els_p4;
+    vector<LorentzVector> gen_els_reco_p4;
+    vector<int> gen_els_mother_id;
+    vector<int> gen_els_grandma_id;
+    vector<bool> gen_els_reco_id;
+    vector<bool> gen_els_reco_iso;
+    
+    int gen_mus_n;
+    vector<LorentzVector> gen_mus_p4;
+    vector<LorentzVector> gen_mus_reco_p4;
+    vector<int> gen_mus_mother_id;
+    vector<int> gen_mus_grandma_id;
+    vector<bool> gen_mus_reco_id;
+    vector<bool> gen_mus_reco_iso;
+    
+    int gen_taus_n;
+    vector<LorentzVector> gen_taus_p4;
+    vector<int> gen_taus_decaymode;
+    vector<int> gen_taus_mother_id;
+    vector<int> gen_taus_grandma_id;
 
     //Leptons pass numerator ID
     bool lep1_passes_id;

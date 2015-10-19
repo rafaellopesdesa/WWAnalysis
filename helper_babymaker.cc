@@ -174,7 +174,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("lep1_iso"              , &lep1_iso              );
   BabyTree->Branch("lep2_iso"              , &lep2_iso              );
   BabyTree->Branch("dilep_p4"              , &dilep_p4              );
-  BabyTree->Branch("genps_genjets"         , &genps_genjets         );
+  BabyTree->Branch("genps_genjets_p4"      , &genps_genjets_p4      );
   BabyTree->Branch("genps_p4"              , &genps_p4              );
   BabyTree->Branch("genps_id"              , &genps_id              );
   BabyTree->Branch("genps_id_mother"       , &genps_id_mother       );
@@ -299,8 +299,6 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("costhetaV"             , &costhetaV             );
   BabyTree->Branch("x1V"                   , &x1V                   );
   BabyTree->Branch("x2V"                   , &x2V                   );
-
-  BabyTree->Branch("genps_genjets_p4", &genps_genjets_p4);
 
   BabyTree->Branch("gen_els_n", &gen_els_n);
   BabyTree->Branch("gen_els_p4", &gen_els_p4);
@@ -461,7 +459,7 @@ void babyMaker::InitBabyNtuple(){
     lep3_quality = -1;
     lep1_iso = -1;
     lep2_iso = -1;
-    genps_genjets.clear();
+    genps_genjets_p4.clear();
     genps_p4.clear();
     genps_id.clear();
     genps_id_mother.clear();
@@ -575,7 +573,6 @@ void babyMaker::InitBabyNtuple(){
     gen_taus_mother_id.clear();
     gen_taus_grandma_id.clear();
     
-    genps_genjets_p4.clear();
 } 
 
 //Main function

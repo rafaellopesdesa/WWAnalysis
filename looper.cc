@@ -89,7 +89,7 @@ int looper::ScanChain(TChain* chain, TString prefix, TString suffix, TString wha
   createAndInitMVA("./CORE");
 
   // Apply DQ
-  const char* json_file = "DQ/Cert_246908-258159_13TeV_PromptReco_Collisions15_25ns_JSON_v3_CMS3.txt"; //  594.65/pb
+  const char* json_file = "DQ/Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON_CMS3.txt"; //  1280.23 /pb
   set_goodrun_file(json_file);
 
   // Apply pileup reweight

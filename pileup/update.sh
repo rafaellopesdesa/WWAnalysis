@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Getting the data pileup..."
-pileupCalc.py -i $1 --inputLumiJSON pileup_JSON_1.2_PRE_10-09-2015.txt --calcMode true --minBiasXsec 80000 --maxPileupBin 50 --numPileupBins 50  MyDataPileupHistogram.root
+pileupCalc.py -i data_latest.txt --inputLumiJSON pileup_latest.txt --calcMode true --minBiasXsec 80000 --maxPileupBin 50 --numPileupBins 50  MyDataPileupHistogram.root
 echo "Do you need to update the MC pileup [Yes/No]?"
 select yn in "Yes" "No"; do
     case $yn in
@@ -9,3 +9,4 @@ select yn in "Yes" "No"; do
         No ) break;;
     esac
 done
+root -q -l -b -x getRatio.C

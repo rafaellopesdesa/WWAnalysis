@@ -38,9 +38,12 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("metPhi_jettoolbox"     , &metPhi_jettoolbox     );
   BabyTree->Branch("met_track"             , &met_track             );
   BabyTree->Branch("metPhi_track"          , &metPhi_track          );
+  BabyTree->Branch("met_track_puppi"       , &met_track_puppi       );
+  BabyTree->Branch("metPhi_track_puppi"    , &metPhi_track_puppi    );
   BabyTree->Branch("met_puppi"             , &met_puppi             );
   BabyTree->Branch("metPhi_puppi"          , &metPhi_puppi          );
   BabyTree->Branch("set"                   , &set                   );
+  BabyTree->Branch("set_puppi"             , &set_puppi             );
   BabyTree->Branch("set30"                 , &set30                 );
 
   BabyTree->Branch("event"                 , &event                 );
@@ -143,8 +146,9 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("lep2_trigger_highpt"   , &lep2_trigger_highpt   );
   BabyTree->Branch("lep1_trigger_lowpt"    , &lep1_trigger_lowpt    );
   BabyTree->Branch("lep2_trigger_lowpt"    , &lep2_trigger_lowpt    );
-  BabyTree->Branch("trigger_highpt"        , &trigger_highpt        );
-  BabyTree->Branch("trigger_lowpt"         , &trigger_lowpt         );  
+  BabyTree->Branch("trigger_double_highpt" , &trigger_double_highpt );
+  BabyTree->Branch("trigger_single_highpt" , &trigger_single_highpt );
+  BabyTree->Branch("trigger_double_lowpt"  , &trigger_double_lowpt  );  
 
   BabyTree->Branch("sf_dilep_eff"          , &sf_dilep_eff          );
 
@@ -175,6 +179,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("lep2_iso"              , &lep2_iso              );
   BabyTree->Branch("dilep_p4"              , &dilep_p4              );
   BabyTree->Branch("genps_genjets_p4"      , &genps_genjets_p4      );
+  BabyTree->Branch("genps_recojets_p4"     , &genps_recojets_p4     );
+  BabyTree->Branch("genps_recodisc"        , &genps_recodisc        );
   BabyTree->Branch("genps_p4"              , &genps_p4              );
   BabyTree->Branch("genps_id"              , &genps_id              );
   BabyTree->Branch("genps_id_mother"       , &genps_id_mother       );
@@ -240,12 +246,16 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   //  BabyTree->Branch("eleID_expectedMissingInnerHits", &eleID_expectedMissingInnerHits);
   //  BabyTree->Branch("eleID_convVtxFitProbability"   , &eleID_convVtxFitProbability   );
 
-  //  BabyTree->Branch("muID_dzPV"             , &muID_dzPV             );
-  //  BabyTree->Branch("muID_ptSig"            , &muID_ptSig            );
-  //  BabyTree->Branch("muID_ip3dSig"          , &muID_ip3dSig          );
-  //  BabyTree->Branch("muID_medMuonPOG"       , &muID_medMuonPOG       );
-  //  BabyTree->Branch("muID_pt"               , &muID_pt               );
-  //  BabyTree->Branch("muID_eta"              , &muID_eta              );
+  BabyTree->Branch("muID_dxyPV"            , &muID_dxyPV            );
+  BabyTree->Branch("muID_dzPV"             , &muID_dzPV             );
+  BabyTree->Branch("muID_type"             , &muID_type             );
+  BabyTree->Branch("muID_nlayers"          , &muID_nlayers          );
+  BabyTree->Branch("muID_ptSig"            , &muID_ptSig            );
+  BabyTree->Branch("muID_ip3dSig"          , &muID_ip3dSig          );
+  BabyTree->Branch("muID_medMuonPOG"       , &muID_medMuonPOG       );
+  BabyTree->Branch("muID_SoftMuon"         , &muID_SoftMuon         );
+  BabyTree->Branch("muID_pt"               , &muID_pt               );
+  BabyTree->Branch("muID_eta"              , &muID_eta              );
   //  
   BabyTree->Branch("trueNumInt"            , &trueNumInt            );
   BabyTree->Branch("nPUvertices"           , &nPUvertices           ); 
@@ -270,7 +280,11 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("projmet"               , &projmet               );
   BabyTree->Branch("projmet_track"         , &projmet_track         );
   BabyTree->Branch("min_projmet"           , &min_projmet           );
+  BabyTree->Branch("projmet_puppi"         , &projmet_puppi         );
+  BabyTree->Branch("projmet_track_puppi"   , &projmet_track_puppi   );
+  BabyTree->Branch("min_projmet_puppi"     , &min_projmet_puppi     );
   BabyTree->Branch("metsig"                , &metsig                );
+  BabyTree->Branch("metsig_puppi"          , &metsig_puppi          );
   BabyTree->Branch("metsig30"              , &metsig30              );
   BabyTree->Branch("dilep_pt"              , &dilep_pt              );
   BabyTree->Branch("lep1_mt"               , &lep1_mt               );
@@ -340,11 +354,16 @@ void babyMaker::InitBabyNtuple(){
     metPhi_jettoolbox = -1.;
     met_track = -1.;
     metPhi_track = -1.;
+    met_track_puppi = -1.;
+    metPhi_track_puppi = -1.;
     met_puppi = -1.;
     metPhi_puppi = -1.;
     projmet = -1.;
     projmet_track = -1.;
     min_projmet = -1.;
+    projmet_puppi = -1.;
+    projmet_track_puppi = -1.;
+    min_projmet_puppi = -1.;
     event = -1;
     lumi = -1;
     run = -1;
@@ -363,6 +382,7 @@ void babyMaker::InitBabyNtuple(){
     gen_ht = -1;
     hyp_class = -1;
     set = -1;
+    set_puppi = -1;
     set30 = -1;
 
     ht = -1;
@@ -435,8 +455,9 @@ void babyMaker::InitBabyNtuple(){
     lep2_idx = -1;
     lep1_MVA = -1.;
     lep2_MVA = -1.;
-    trigger_highpt = -1;
-    trigger_lowpt = -1;
+    trigger_double_highpt = -1;
+    trigger_single_highpt = -1;
+    trigger_double_lowpt = -1;
     lep1_trigger_highpt = -1;
     lep2_trigger_highpt = -1;
     lep1_trigger_lowpt  = -1;
@@ -460,6 +481,8 @@ void babyMaker::InitBabyNtuple(){
     lep1_iso = -1;
     lep2_iso = -1;
     genps_genjets_p4.clear();
+    genps_recojets_p4.clear();
+    genps_recodisc.clear();
     genps_p4.clear();
     genps_id.clear();
     genps_id_mother.clear();
@@ -528,13 +551,18 @@ void babyMaker::InitBabyNtuple(){
     eleID_gsfhits.clear();
     eleID_expectedMissingInnerHits.clear();
     eleID_convVtxFitProbability.clear();
+    */
+    muID_dxyPV.clear();      
     muID_dzPV.clear();      
+    muID_type.clear();     
+    muID_nlayers.clear();     
     muID_ptSig.clear();     
     muID_ip3dSig.clear();
     muID_medMuonPOG.clear();
+    muID_SoftMuon.clear();
     muID_pt.clear();        
     muID_eta.clear();
-    */
+    
     lep1_isGoodLeg = 0; 
     lep2_isGoodLeg = 0; 
     lep1_isFakeLeg = 0; 
@@ -688,19 +716,23 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
   lep2_passes_id = isGoodLepton(lep2_id, lep2_idx);
 
   //Trigger
-  trigger_highpt = ( passUnprescaledHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") ||    
-		     passUnprescaledHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v") ||
-		     passUnprescaledHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") ||
-		     passUnprescaledHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") ||
-		     passUnprescaledHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") ||
-		     passUnprescaledHLTTriggerPattern("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") ||
-		     passUnprescaledHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") ||
-		     passUnprescaledHLTTriggerPattern("HLT_IsoMu20_v") ||
-		     passUnprescaledHLTTriggerPattern("HLT_IsoTkMu20_v") ||
-		     passUnprescaledHLTTriggerPattern("HLT_Ele27_eta2p1_WPLoose_Gsf_v") );
-  trigger_lowpt = ( passUnprescaledHLTTriggerPattern("HLT_DoubleMu8_Mass8_PFHT300_v") ||
-		    passUnprescaledHLTTriggerPattern("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v") ||
-		    passUnprescaledHLTTriggerPattern("HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_v") );
+  trigger_double_highpt = ( passUnprescaledHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") ||    
+			    passUnprescaledHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v") ||
+			    passUnprescaledHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") ||
+			    passUnprescaledHLTTriggerPattern("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") ||
+			    passUnprescaledHLTTriggerPattern("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") ||
+			    passUnprescaledHLTTriggerPattern("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") ||
+			    passUnprescaledHLTTriggerPattern("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") );
+  trigger_single_highpt = ( passUnprescaledHLTTriggerPattern("HLT_IsoMu20_v") ||
+			    passUnprescaledHLTTriggerPattern("HLT_IsoTkMu20_v") ||
+			    passUnprescaledHLTTriggerPattern("HLT_IsoMu27_v") ||
+			    passUnprescaledHLTTriggerPattern("HLT_Ele23_WPLoose_Gsf_v") || 
+			    passUnprescaledHLTTriggerPattern("HLT_Ele27_WPLoose_Gsf_v") || 
+			    passUnprescaledHLTTriggerPattern("HLT_Ele22_eta2p1_WP75_Gsf_v") );
+  
+  trigger_double_lowpt = ( passUnprescaledHLTTriggerPattern("HLT_DoubleMu8_Mass8_PFHT300_v") ||
+			   passUnprescaledHLTTriggerPattern("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v") ||
+			   passUnprescaledHLTTriggerPattern("HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_v") );
 
   if (isData) {
     lep1_trigger_highpt = getHighPtTriggerPrescale(lep1_p4, lep1_idx, lep1_id);
@@ -912,6 +944,8 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
     corrJets_puppi.push_back(pfjet_p4_uncor*corr);
 
   }
+  genps_recojets_p4 = corrJets;
+  genps_recodisc    = cms3.pfjets_pfCombinedInclusiveSecondaryVertexV2BJetTag();
  
   pair<float, float> metCorrected_puppi = getT1CHSMET_fromMINIAOD(jetCorrector_puppi);
   met_puppi = metCorrected_puppi.first;
@@ -933,8 +967,13 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
   met_track = trackerMET_.met;
   metPhi_track = trackerMET_.metphi;
 
+  metStruct trackerMET_puppi_ = trackerMETpuppi(0.1);
+  met_track_puppi = trackerMET_puppi_.met;
+  metPhi_track_puppi = trackerMET_puppi_.metphi;
+
   // SET is uncorrect, and will continue.
-  set = evt_pfsumet();
+  set = evt_pfsumet() - lep1_p4.pt() - lep2_p4.pt();
+  set_puppi = evt_puppi_pfsumet() - lep1_p4.pt() - lep2_p4.pt();
 
   // The bullshit MET30
   pair<float, float> met3p0 = MET3p0();
@@ -942,7 +981,7 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
   metPhi30 = met3p0.second;
 
 
-  std::pair <vector <Jet>, vector <Jet> > jet_results = WWJetsCalculator(corrJets);
+  std::pair <vector <Jet>, vector <Jet> > jet_results = WWJetsCalculator(corrJets, false);
   std::pair <vector <Jet>, vector <Jet> > jet_results_puppi = WWJetsCalculator(corrJets_puppi, true);
 
   ht = 0;
@@ -1073,7 +1112,13 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
   projmet_track = min(lep1_met_dphi,lep2_met_dphi) < TMath::Pi()/2. ?
     met_track * sin(min(lep1_met_dphi,lep2_met_dphi)) : met_track;
   min_projmet = min(projmet_track,projmet);
+  projmet_puppi = min(lep1_met_dphi,lep2_met_dphi) < TMath::Pi()/2. ?
+    met_puppi * sin(min(lep1_met_dphi,lep2_met_dphi)) : met_puppi;
+  projmet_track_puppi = min(lep1_met_dphi,lep2_met_dphi) < TMath::Pi()/2. ?
+    met_track_puppi * sin(min(lep1_met_dphi,lep2_met_dphi)) : met_track_puppi;
+  min_projmet_puppi = min(projmet_track_puppi,projmet_puppi);
   metsig = met/sqrt(set);
+  metsig_puppi = met_puppi/sqrt(set_puppi);
   if (ht30 > 0) {
     metsig30 = met/sqrt(ht30);  
   } else {
@@ -1105,8 +1150,8 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
   x2V = (lep1_p4.e() + lep2_p4.e() - lep1_p4.pz() - lep1_p4.pz())/13000.;
 
   //Closest Jet
-  jet_close_lep1 = closestJet(lep1_p4, 0., 4.7, 1);
-  jet_close_lep2 = closestJet(lep2_p4, 0., 4.7, 1);
+  jet_close_lep1 = closestJet(lep1_p4, 0.3, 4.7, 1);
+  jet_close_lep2 = closestJet(lep2_p4, 0.3, 4.7, 1);
 
   //nVeto Leptons
   for (unsigned int eidx = 0; eidx < tas::els_p4().size(); eidx++){
@@ -1184,19 +1229,22 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
     eleID_convVtxFitProbability   .push_back(tas::els_conv_vtx_prob().at(index));
 
   }
-
+  */
   //Muon ID variables
-  for (unsigned int index = 0; index < mus_ip3d().size(); index++){
-    if (!isGoodVetoMuon(index)) continue;
-    if (tas::mus_p4().at(index).pt() < 5) continue;
+  for (unsigned int index = 0; index < mus_p4().size(); index++){
+    if (tas::mus_p4().at(index).pt() < 3) continue;
+    muID_dxyPV     .push_back(fabs(mus_dxyPV().at(index)));
     muID_dzPV      .push_back(fabs(mus_dzPV().at(index)));
+    muID_type      .push_back(mus_type().at(index));
+    muID_nlayers   .push_back(mus_nlayers().at(index));
     muID_ptSig     .push_back(mus_ptErr().at(index)/mus_trk_p4().at(index).pt());
     muID_ip3dSig   .push_back(fabs(mus_ip3d().at(index))/mus_ip3derr().at(index));
     muID_medMuonPOG.push_back(isMediumMuonPOG(index));
+    muID_SoftMuon  .push_back(PassSoftMuonCut(index));
     muID_pt        .push_back(mus_p4().at(index).pt());
     muID_eta       .push_back(fabs(mus_p4().at(index).eta()));
   }
-  */
+  
   
   //Fill Baby
   BabyTree->Fill();

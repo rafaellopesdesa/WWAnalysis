@@ -106,6 +106,8 @@ class babyMaker {
     // track MET
     float met_track;
     float metPhi_track;
+    float met_track_puppi;
+    float metPhi_track_puppi;
 
     float met_puppi;
     float metPhi_puppi;
@@ -127,6 +129,7 @@ class babyMaker {
     float ht25;
     float ht30;
     float set;
+    float set_puppi;
     vector<float> pileup_jet_id;
     vector<int> jet_parton_flavor;
     vector<int> jet_hadron_flavor;
@@ -164,7 +167,11 @@ class babyMaker {
     float projmet              ;
     float projmet_track        ;
     float min_projmet          ;
+    float projmet_puppi        ;
+    float projmet_track_puppi  ;
+    float min_projmet_puppi    ;
     float metsig               ;
+    float metsig_puppi         ;
     float metsig30             ;
     float dilep_pt             ;
     float lep1_mt              ;
@@ -259,8 +266,9 @@ class babyMaker {
     int lep2_trigger_highpt;
     int lep1_trigger_lowpt ;
     int lep2_trigger_lowpt ;
-    bool trigger_highpt;
-    bool trigger_lowpt;
+    bool trigger_double_highpt;
+    bool trigger_single_highpt;
+    bool trigger_double_lowpt;
     float sf_dilep_eff;
 
     //mT for both leptons, mt2
@@ -300,6 +308,8 @@ class babyMaker {
     vector <int> genps_status;
     vector <int> genps_id_grandma;
     vector <LorentzVector> genps_genjets_p4;
+    vector <LorentzVector> genps_recojets_p4;
+    vector <float> genps_recodisc;
 
     int gen_els_n;
     vector<LorentzVector> gen_els_p4;
@@ -392,9 +402,13 @@ class babyMaker {
         
     //Muon ID variables
     vector <float> muID_dzPV;      
+    vector <float> muID_dxyPV;      
     vector <float> muID_ptSig;     
+    vector <int>   muID_type;
+    vector <int>   muID_nlayers;
     vector <float> muID_ip3dSig;   
     vector <float> muID_medMuonPOG;
+    vector <float> muID_SoftMuon;
     vector <float> muID_pt;        
     vector <float> muID_eta;       
 

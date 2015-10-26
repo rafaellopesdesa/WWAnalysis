@@ -946,7 +946,7 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
   }
   genps_recojets_p4 = corrJets;
   genps_recodisc    = cms3.pfjets_pfCombinedInclusiveSecondaryVertexV2BJetTag();
- 
+  
   pair<float, float> metCorrected_puppi = getT1CHSMET_fromMINIAOD(jetCorrector_puppi);
   met_puppi = metCorrected_puppi.first;
   metPhi_puppi = metCorrected_puppi.second;
@@ -972,8 +972,8 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
   metPhi_track_puppi = trackerMET_puppi_.metphi;
 
   // SET is uncorrect, and will continue.
-  set = evt_pfsumet() - lep1_p4.pt() - lep2_p4.pt();
-  set_puppi = evt_puppi_pfsumet() - lep1_p4.pt() - lep2_p4.pt();
+  set = evt_pfsumet() - lep1_p4.pt() - lep2_p4.pt();  
+  set_puppi = METpuppi().sumet - lep1_p4.pt() - lep2_p4.pt();
 
   // The bullshit MET30
   pair<float, float> met3p0 = MET3p0();

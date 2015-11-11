@@ -43,7 +43,8 @@ CORESOURCES=$(DIR)/$(COREDIR)/CMS3.cc \
  $(DIR)/$(TOOLSDIR)/dorky/dorky.cc \
  $(DIR)/$(TOOLSDIR)/goodrun.cc \
  $(DIR)/$(TOOLSDIR)/utils.cc \
- $(DIR)/$(TOOLSDIR)/JetCorrector.cc
+ $(DIR)/$(TOOLSDIR)/JetCorrector.cc \
+ $(DIR)/$(TOOLSDIR)/badEventFilter.cc
 
 COREOBJECTS=$(CORESOURCES:.cc=.o)
 

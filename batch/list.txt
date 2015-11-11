@@ -1,0 +1,55 @@
+WWTo2L2Nu /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/WWTo2L2Nu_13TeV-powheg_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+TTTo2L2Nu /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/TTTo2L2Nu_13TeV-powheg_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/ 1.011134
+ST_tW /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v2/V07-04-11/
+ST_tbarW /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+TTWToLNu /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+TTWToQQ /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/TTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/ 
+TTZToLLNuNu /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v2/V07-04-11/
+TTZToQQ /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/TTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+TTG /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/TTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+WWZ /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+ZZZ /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+WZZ /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+GGHWW /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+VBFHWW /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+WHMWW /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/HWminusJ_HToWW_M125_13TeV_powheg_pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+WHPWW /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/HWplusJ_HToWW_M125_13TeV_powheg_pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+DYToLL_NLO /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+DYToLL_LowMass_NLO /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+GGWWTo2L2Nu /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/GluGluWWTo2L2Nu_noHiggs_MCFM_13TeV_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+-- VVTo2L2Nu /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/VVTo2L2Nu_13TeV_amcatnloFXFX_madspin_pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+WZTo3LNu /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+WZTo2L2Q /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/ 
+ZZTo2L2Q /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+ZZTo4L /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/ZZTo4L_13TeV_powheg_pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v2/V07-04-11/
+WWDSC /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/WW_DoubleScattering_13TeV-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+ZZTo2L2Nu /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/ZZTo2L2Nu_13TeV_powheg_pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v2/V07-04-11/
+WGToLNuG /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+ZGTo2LG /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+
+DATA_2015C_DOUBLEEG_0510 /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_DoubleEG_MINIAOD_05Oct2015-v1/merged/V07-04-11/
+DATA_2015C_DOUBLEMUON_0510 /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_DoubleMuon_MINIAOD_05Oct2015-v1/merged/V07-04-11/
+DATA_2015C_MUONEG_0510 /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_MuonEG_MINIAOD_05Oct2015-v1/merged/V07-04-11/
+DATA_2015C_SINGLEELECTRON_0510 /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_SingleElectron_MINIAOD_05Oct2015-v1/merged/V07-04-11/
+DATA_2015C_SINGLEMUON_0510 /hadoop/cms/store/group/snt/run2_data/Run2015C_25ns_SingleMuon_MINIAOD_05Oct2015-v1/merged/V07-04-11/
+DATA_2015D_DOUBLEEG_0510 /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleEG_MINIAOD_05Oct2015-v1/merged/V07-04-11/
+DATA_2015D_DOUBLEMUON_0510 /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleMuon_MINIAOD_05Oct2015-v1/merged/V07-04-11/
+DATA_2015D_MUONEG_0510 /hadoop/cms/store/group/snt/run2_data/Run2015D_MuonEG_MINIAOD_05Oct2015-v2/merged/V07-04-11/
+DATA_2015D_SINGLEELECTRON_0510 /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleElectron_MINIAOD_05Oct2015-v1/merged/V07-04-11/
+DATA_2015D_SINGLEMUON_0510 /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleMuon_MINIAOD_05Oct2015-v1/merged/V07-04-11/
+DATA_2015D_DOUBLEEG_PROMPTv4 /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleEG_MINIAOD_PromptReco-v4/merged/V07-04-11/
+DATA_2015D_DOUBLEMUON_PROMPTv4 /hadoop/cms/store/group/snt/run2_data/Run2015D_DoubleMuon_MINIAOD_PromptReco-v4/merged/V07-04-11/
+DATA_2015D_MUONEG_PROMPTv4 /hadoop/cms/store/group/snt/run2_data/Run2015D_MuonEG_MINIAOD_PromptReco-v4/merged/V07-04-11/
+DATA_2015D_SINGLEELECTRON_PROMPTv4 /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleElectron_MINIAOD_PromptReco-v4/merged/V07-04-11/
+DATA_2015D_SINGLEMUON_PROMPTv4 /hadoop/cms/store/group/snt/run2_data/Run2015D_SingleMuon_MINIAOD_PromptReco-v4/merged/V07-04-11/
+
+-- DYToLL_LowMass /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/DYJetsToLL_M-5to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+-- DYToLL_LowMass_HT100_200 /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/DYJetsToLL_M-5to50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+-- DYToLL_LowMass_HT200_400 /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/DYJetsToLL_M-5to50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+-- DYToLL_LowMass_HT400_600 /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/DYJetsToLL_M-5to50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+-- DYToLL_LowMass_HT600 /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/DYJetsToLL_M-5to50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+-- DYToLL /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+-- DYToLL_HT100_200 /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+-- DYToLL_HT200_400 /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/
+-- DYToLL_HT400_600 /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v2/V07-04-11/
+-- DYToLL_HT600 /hadoop/cms/store/group/snt/run2_25ns_MiniAODv2/DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/V07-04-11/

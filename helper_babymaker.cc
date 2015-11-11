@@ -4,9 +4,10 @@ using namespace tas;
 using namespace WWAnalysis;
 
 //Main functions
-babyMaker::babyMaker(FactorizedJetCorrector* jetCorrector_pf_, FactorizedJetCorrector* jetCorrector_puppi_, bool debug) {
+babyMaker::babyMaker(FactorizedJetCorrector* jetCorrector_pf_, FactorizedJetCorrector* jetCorrector_puppi_, JetCorrectionUncertainty* jetCorrector_unc_, bool debug) {
   jetCorrector = jetCorrector_pf_;
   jetCorrector_puppi = jetCorrector_puppi_;
+  jetCorrector_unc = jetCorrector_unc_;
   path = ".";
   verbose = debug;
   scalePileupHist = nullptr;
@@ -30,6 +31,10 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   //Define Branches
   BabyTree->Branch("met"                   , &met                   );
   BabyTree->Branch("metPhi"                , &metPhi                );
+  BabyTree->Branch("met_varUp"             , &met_varUp             );
+  BabyTree->Branch("met_varDown"           , &met_varDown           );
+  BabyTree->Branch("metPhi_varUp"          , &metPhi_varUp          );
+  BabyTree->Branch("metPhi_varDown"        , &metPhi_varDown        );
   BabyTree->Branch("met30"                 , &met30                 );
   BabyTree->Branch("metPhi30"              , &metPhi30              );
   BabyTree->Branch("met_raw"               , &met_raw               );
@@ -50,12 +55,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("lumi"                  , &lumi                  );
   BabyTree->Branch("run"                   , &run                   );
 
-  BabyTree->Branch("filt_csc"              , &filt_csc              );
-  BabyTree->Branch("filt_hbhe"             , &filt_hbhe             );
-  BabyTree->Branch("filt_hcallaser"        , &filt_hcallaser        );
-  BabyTree->Branch("filt_ecaltp"           , &filt_ecaltp           );
-  BabyTree->Branch("filt_trkfail"          , &filt_trkfail          );
-  BabyTree->Branch("filt_eebadsc"          , &filt_eebadsc          );
+  BabyTree->Branch("pass_met_filters"      , &pass_met_filters      );
 
   BabyTree->Branch("is_real_data"          , &is_real_data          );
   BabyTree->Branch("scale1fb"              , &scale1fb              );
@@ -83,6 +83,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ht25"                  , &ht25                  );
   BabyTree->Branch("ht30"                  , &ht30                  );
   BabyTree->Branch("jets"                  , &jets                  );
+  BabyTree->Branch("jets_varUp"            , &jets_varUp            );
+  BabyTree->Branch("jets_varDown"          , &jets_varDown          );
   BabyTree->Branch("jets_CSVv2"            , &jets_CSVv2            );
   BabyTree->Branch("jets_CSVsm"            , &jets_CSVsm            );
   BabyTree->Branch("jets_CSVse"            , &jets_CSVse            );
@@ -112,6 +114,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("ht25_puppi"            , &ht25_puppi            );
   BabyTree->Branch("ht30_puppi"            , &ht30_puppi            );
   BabyTree->Branch("jets_puppi"            , &jets_puppi            );
+  BabyTree->Branch("jets_puppi_varUp"      , &jets_puppi_varUp      );
+  BabyTree->Branch("jets_puppi_varDown"    , &jets_puppi_varDown    );
   BabyTree->Branch("jets_CSVv2_puppi"      , &jets_CSVv2_puppi      );
   BabyTree->Branch("jets_CSVsm_puppi"      , &jets_CSVsm_puppi      );
   BabyTree->Branch("jets_CSVse_puppi"      , &jets_CSVse_puppi      );
@@ -254,8 +258,7 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("muID_ip3dSig"          , &muID_ip3dSig          );
   BabyTree->Branch("muID_medMuonPOG"       , &muID_medMuonPOG       );
   BabyTree->Branch("muID_SoftMuon"         , &muID_SoftMuon         );
-  BabyTree->Branch("muID_pt"               , &muID_pt               );
-  BabyTree->Branch("muID_eta"              , &muID_eta              );
+  BabyTree->Branch("muID_p4"               , &muID_p4               );
   //  
   BabyTree->Branch("trueNumInt"            , &trueNumInt            );
   BabyTree->Branch("nPUvertices"           , &nPUvertices           ); 
@@ -314,6 +317,12 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("x1V"                   , &x1V                   );
   BabyTree->Branch("x2V"                   , &x2V                   );
 
+  BabyTree->Branch("gen_bs_n", &gen_bs_n);
+  BabyTree->Branch("gen_bs_p4", &gen_bs_p4);
+  BabyTree->Branch("gen_bs_mother_id", &gen_bs_mother_id);
+  BabyTree->Branch("gen_bs_grandma_id", &gen_bs_grandma_id);
+  BabyTree->Branch("gen_bs_closest_genjet", &gen_bs_closest_genjet);
+
   BabyTree->Branch("gen_els_n", &gen_els_n);
   BabyTree->Branch("gen_els_p4", &gen_els_p4);
   BabyTree->Branch("gen_els_reco_p4", &gen_els_reco_p4);
@@ -335,6 +344,8 @@ void babyMaker::MakeBabyNtuple(const char* output_name){
   BabyTree->Branch("gen_taus_decaymode", &gen_taus_decaymode);
   BabyTree->Branch("gen_taus_mother_id", &gen_taus_mother_id);
   BabyTree->Branch("gen_taus_grandma_id", &gen_taus_grandma_id);
+
+  BabyTree->Branch("gen_weights", &gen_weights);
   
   //Print warning!
   cout << "Careful!! Path is " << path << endl;
@@ -346,6 +357,10 @@ void babyMaker::InitBabyNtuple(){
 
     met = -1;
     metPhi = -1;
+    met_varUp = -1;
+    metPhi_varUp = -1;
+    met_varDown = -1;
+    metPhi_varDown = -1;
     met30 = -1;
     metPhi30 = -1;
     met_raw = -1.;
@@ -367,12 +382,7 @@ void babyMaker::InitBabyNtuple(){
     event = -1;
     lumi = -1;
     run = -1;
-    filt_csc = 0;
-    filt_hbhe = 0;
-    filt_hcallaser = 0;
-    filt_ecaltp = 0;
-    filt_trkfail = 0;
-    filt_eebadsc = 0;
+    pass_met_filters = 0;
     is_real_data = 0;
     scale1fb = -1;
     xsec = -1;
@@ -401,6 +411,8 @@ void babyMaker::InitBabyNtuple(){
     nbtags25 = -1;
     nbtags30 = -1;
     jets.clear();
+    jets_varUp.clear();
+    jets_varDown.clear();
     jets_CSVv2.clear();
     jets_CSVsm.clear();
     jets_CSVse.clear();
@@ -430,6 +442,8 @@ void babyMaker::InitBabyNtuple(){
     nbtags25_puppi = -1;
     nbtags30_puppi = -1;
     jets_puppi.clear();
+    jets_puppi_varUp.clear();
+    jets_puppi_varDown.clear();
     jets_CSVv2_puppi.clear();
     jets_CSVsm_puppi.clear();
     jets_CSVse_puppi.clear();
@@ -442,6 +456,8 @@ void babyMaker::InitBabyNtuple(){
     pileup_jet_id_puppi.clear();
     jet_parton_flavor_puppi.clear();
     jet_hadron_flavor_puppi.clear();
+
+    gen_weights.clear();
 
     lep1_motherID = 0;
     lep2_motherID = 0;
@@ -560,8 +576,7 @@ void babyMaker::InitBabyNtuple(){
     muID_ip3dSig.clear();
     muID_medMuonPOG.clear();
     muID_SoftMuon.clear();
-    muID_pt.clear();        
-    muID_eta.clear();
+    muID_p4.clear();        
     
     lep1_isGoodLeg = 0; 
     lep2_isGoodLeg = 0; 
@@ -581,6 +596,12 @@ void babyMaker::InitBabyNtuple(){
     gen_els_n = -1.;
     gen_mus_n = -1.;
     gen_taus_n = -1.;
+    gen_bs_n = -1;
+
+    gen_bs_p4.clear();
+    gen_bs_mother_id.clear();
+    gen_bs_grandma_id.clear();
+    gen_bs_closest_genjet.clear();
     
     gen_els_p4.clear();
     gen_els_reco_p4.clear();
@@ -641,17 +662,15 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
     kfactor = tas::evt_kfactor();
     gen_met = tas::gen_met();
     gen_met_phi = tas::gen_metPhi();
+
+    for (unsigned int iwgt = 0; iwgt < cms3.genweights().size(); ++iwgt) {
+      gen_weights.push_back(tas::genweights().at(iwgt));
+    }
+
   }
 
   //Fill data vs. mc variables
-  filt_csc = is_real_data ? tas::evt_cscTightHaloId() : 1;
-  filt_hbhe = is_real_data ? hbheNoiseFilter_25ns() : 1;
-  filt_ecaltp = is_real_data ? tas::filt_ecalTP() : 1;
-  filt_eebadsc = is_real_data ? tas::filt_eeBadSc() : 1;
-
-  filt_trkfail = 1;
-  filt_hcallaser = 1;
-
+  pass_met_filters = is_real_data ? passesMETfilterv2() : 1;
   scale1fb = is_real_data ? 1 : tas::evt_scale1fb() * fudge;
 
   // Pileup reweighting
@@ -800,6 +819,24 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
 
     for (int i=0; i<cms3.genps_id().size(); i++) {
       
+      if (cms3.genps_isLastCopy().at(i) && TMath::Abs(cms3.genps_id().at(i)) == 5) {
+	gen_bs_p4.push_back(cms3.genps_p4().at(i));
+	gen_bs_mother_id.push_back(cms3.genps_id_simplemother().at(i));
+	gen_bs_grandma_id.push_back(cms3.genps_id_simplegrandma().at(i));
+
+	int genjet_idx = -1;
+	float min_dr = 9999999.;
+	for (uint j=0; j<cms3.genjets_p4NoMuNoNu().size(); j++) {
+	  float DR = ROOT::Math::VectorUtil::DeltaR(cms3.genjets_p4NoMuNoNu().at(j), cms3.genps_p4().at(i));
+	  if (DR < min_dr) {
+	    min_dr = DR;
+	    genjet_idx = j;
+	  }
+	}
+	gen_bs_closest_genjet.push_back(genjet_idx);
+	gen_bs_n = gen_bs_p4.size();
+      }
+	
       
       if (cms3.genps_fromHardProcessBeforeFSR().at(i) && TMath::Abs(cms3.genps_id().at(i)) == 11) {
 	gen_els_p4.push_back(cms3.genps_p4().at(i));
@@ -895,12 +932,10 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
   
   //Determine and save jet and b-tag variables
   vector<LorentzVector> corrJets;
+  vector<float> uncJets;
   for (size_t iJet=0; iJet < tas::pfjets_p4().size(); iJet++) {
     
     LorentzVector pfjet_p4_uncor = tas::pfjets_p4().at(iJet) * cms3.pfjets_undoJEC().at(iJet);
-
-    //    if (pfjet_p4_uncor.pt() < 10) continue;
-    //    if (pfjet_p4_uncor.eta() > 9.9) continue;
 
     jetCorrector->setRho   ( tas::evt_fixgridfastjet_all_rho() );
     jetCorrector->setJetA  ( tas::pfjets_area().at(iJet)       );
@@ -917,9 +952,17 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
     // apply new JEC to p4
     corrJets.push_back(pfjet_p4_uncor*corr);
 
+    if (pfjet_p4_uncor.pt()*corr > 0. && fabs(pfjet_p4_uncor.eta()) < 5.4) {
+      jetCorrector_unc->setJetEta(pfjet_p4_uncor.eta());
+      jetCorrector_unc->setJetPt(pfjet_p4_uncor.pt() * corr);
+      uncJets.push_back(jetCorrector_unc->getUncertainty(true));
+    } else uncJets.push_back(0.);
+
+
   }
 
   vector<LorentzVector> corrJets_puppi;
+  vector<float> uncJets_puppi;
   for (size_t iJet=0; iJet < tas::pfjets_puppi_p4().size(); iJet++) {
     
     LorentzVector pfjet_p4_uncor = tas::pfjets_puppi_p4().at(iJet) * cms3.pfjets_puppi_undoJEC().at(iJet);
@@ -942,6 +985,7 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
     // apply new JEC to p4
     //    cout << pfjet_p4_uncor.pt()*corr << endl;
     corrJets_puppi.push_back(pfjet_p4_uncor*corr);
+    uncJets_puppi.push_back(0.);
 
   }
   genps_recojets_p4 = corrJets;
@@ -954,6 +998,15 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
   pair<float, float> metCorrected = getT1CHSMET_fromMINIAOD(jetCorrector);
   met = metCorrected.first;
   metPhi = metCorrected.second;
+
+  pair<float, float> metCorrected_varUp = getT1CHSMET_fromMINIAOD(jetCorrector, jetCorrector_unc, true);
+  pair<float, float> metCorrected_varDown = getT1CHSMET_fromMINIAOD(jetCorrector, jetCorrector_unc, false);
+  met_varUp = metCorrected_varUp.first;
+  metPhi_varUp = metCorrected_varUp.second;
+  met_varDown = metCorrected_varDown.first;
+  metPhi_varDown = metCorrected_varDown.second;
+
+  //jetcorr_uncertainty
 
   pair<float, float> metCorrected_jettoolbox = getT1CHSMET(jetCorrector);
   met_jettoolbox = metCorrected_jettoolbox.first;
@@ -981,8 +1034,8 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
   metPhi30 = met3p0.second;
 
 
-  std::pair <vector <Jet>, vector <Jet> > jet_results = WWJetsCalculator(corrJets, false);
-  std::pair <vector <Jet>, vector <Jet> > jet_results_puppi = WWJetsCalculator(corrJets_puppi, true);
+  std::pair <vector <Jet>, vector <Jet> > jet_results = WWJetsCalculator(corrJets, uncJets, false);
+  std::pair <vector <Jet>, vector <Jet> > jet_results_puppi = WWJetsCalculator(corrJets_puppi, uncJets_puppi, true);
 
   ht = 0;
   ht20 = 0.;
@@ -999,6 +1052,8 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
   nbtags30 = 0;
 
   for (unsigned int i = 0; i < jet_results.first.size(); i++) jets.push_back(jet_results.first.at(i).p4());
+  for (unsigned int i = 0; i < jet_results.first.size(); i++) jets_varUp.push_back(jet_results.first.at(i).p4_varUp());
+  for (unsigned int i = 0; i < jet_results.first.size(); i++) jets_varDown.push_back(jet_results.first.at(i).p4_varDown());
   for (unsigned int i = 0; i < jet_results.first.size(); i++) jets_disc.push_back(jet_results.first.at(i).CSVv2());
   for (unsigned int i = 0; i < jet_results.first.size(); i++) jets_CSVv2.push_back(jet_results.first.at(i).CSVv2());
   for (unsigned int i = 0; i < jet_results.first.size(); i++) jets_CSVsm.push_back(jet_results.first.at(i).CSVsm());
@@ -1049,6 +1104,8 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
   nbtags30_puppi = 0;
 
   for (unsigned int i = 0; i < jet_results_puppi.first.size(); i++) jets_puppi.push_back(jet_results_puppi.first.at(i).p4());
+  for (unsigned int i = 0; i < jet_results_puppi.first.size(); i++) jets_puppi_varUp.push_back(jet_results_puppi.first.at(i).p4_varUp());
+  for (unsigned int i = 0; i < jet_results_puppi.first.size(); i++) jets_puppi_varDown.push_back(jet_results_puppi.first.at(i).p4_varDown());
   for (unsigned int i = 0; i < jet_results_puppi.first.size(); i++) jets_disc_puppi.push_back(jet_results_puppi.first.at(i).CSVv2());
   for (unsigned int i = 0; i < jet_results_puppi.first.size(); i++) jets_CSVv2_puppi.push_back(jet_results_puppi.first.at(i).CSVv2());
   for (unsigned int i = 0; i < jet_results_puppi.first.size(); i++) jets_CSVsm_puppi.push_back(jet_results_puppi.first.at(i).CSVsm());
@@ -1241,8 +1298,7 @@ int babyMaker::ProcessBaby(string filename_in, double fudge){
     muID_ip3dSig   .push_back(fabs(mus_ip3d().at(index))/mus_ip3derr().at(index));
     muID_medMuonPOG.push_back(isMediumMuonPOG(index));
     muID_SoftMuon  .push_back(PassSoftMuonCut(index));
-    muID_pt        .push_back(mus_p4().at(index).pt());
-    muID_eta       .push_back(fabs(mus_p4().at(index).eta()));
+    muID_p4        .push_back(mus_p4().at(index));
   }
   
   

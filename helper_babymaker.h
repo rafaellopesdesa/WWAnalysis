@@ -21,6 +21,7 @@
 #include "CORE/MetSelections.h"
 #include "CORE/Tools/JetCorrector.h"
 #include "CORE/Tools/jetcorr/FactorizedJetCorrector.h"
+#include "CORE/Tools/jetcorr/JetCorrectionUncertainty.h"
 
 #include <vector>
 #include <string>
@@ -35,13 +36,16 @@ using namespace std;
 class babyMaker {
 
   public:
-    babyMaker(FactorizedJetCorrector* jetCorrector_pf_, FactorizedJetCorrector* jetCorrector_puppi_, bool debug = 0);
+    babyMaker(FactorizedJetCorrector* jetCorrector_pf_, 
+	      FactorizedJetCorrector* jetCorrector_puppi_, 
+	      JetCorrectionUncertainty* jetCorrector_unc_,
+	      bool debug = 0);
     void MakeBabyNtuple(const char* output_name);
     void InitBabyNtuple();
     void CloseBabyNtuple () { BabyFile->cd(); BabyTree->Write(); BabyFile->Close(); }
     int ProcessBaby(string filename_in, double fudge);
     void SetPileupHist(const char* pileup_file);
-
+    
   protected:
     TFile* BabyFile;
     TTree* BabyTree;
@@ -50,6 +54,7 @@ class babyMaker {
 
     FactorizedJetCorrector* jetCorrector;
     FactorizedJetCorrector* jetCorrector_puppi;
+    JetCorrectionUncertainty* jetCorrector_unc;
     
     TH1D* scalePileupHist;
     float scalePileup;
@@ -62,6 +67,11 @@ class babyMaker {
     //MET
     float met;
     float metPhi;
+
+    float met_varUp;
+    float metPhi_varUp;
+    float met_varDown;
+    float metPhi_varDown;
  
     //Meta Variables
     int event;
@@ -78,13 +88,13 @@ class babyMaker {
     vector <int> nPUvertices;
     int nGoodVertices; 
 
+    // gen weights
+    vector <float> gen_weights;
+    
+    // JEC uncertainty
+    
     //Filters
-    bool filt_csc;
-    bool filt_hbhe;
-    bool filt_hcallaser;
-    bool filt_ecaltp;
-    bool filt_trkfail;
-    bool filt_eebadsc;
+    bool pass_met_filters;
 
     //Gen MET 
     float gen_met;      
@@ -134,6 +144,8 @@ class babyMaker {
     vector<int> jet_parton_flavor;
     vector<int> jet_hadron_flavor;
     vector <LorentzVector> jets;
+    vector <LorentzVector> jets_varUp;
+    vector <LorentzVector> jets_varDown;
     vector <float> jets_disc;
     vector <float> jets_CSVv2;
     vector <float> jets_CSVsm;
@@ -156,6 +168,8 @@ class babyMaker {
     vector<int> jet_parton_flavor_puppi;
     vector<int> jet_hadron_flavor_puppi;
     vector <LorentzVector> jets_puppi;
+    vector <LorentzVector> jets_puppi_varUp;
+    vector <LorentzVector> jets_puppi_varDown;
     vector <float> jets_disc_puppi;
     vector <float> jets_CSVv2_puppi;
     vector <float> jets_CSVsm_puppi;
@@ -311,6 +325,12 @@ class babyMaker {
     vector <LorentzVector> genps_recojets_p4;
     vector <float> genps_recodisc;
 
+    int gen_bs_n;
+    vector<LorentzVector> gen_bs_p4;
+    vector<int> gen_bs_mother_id;
+    vector<int> gen_bs_grandma_id;
+    vector<int> gen_bs_closest_genjet;
+
     int gen_els_n;
     vector<LorentzVector> gen_els_p4;
     vector<LorentzVector> gen_els_reco_p4;
@@ -409,8 +429,7 @@ class babyMaker {
     vector <float> muID_ip3dSig;   
     vector <float> muID_medMuonPOG;
     vector <float> muID_SoftMuon;
-    vector <float> muID_pt;        
-    vector <float> muID_eta;       
+    vector <LorentzVector> muID_p4;
 
     //InSituFR
     bool lep1_isGoodLeg;

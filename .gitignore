@@ -6,15 +6,9 @@ LinkDef_out*
 *.exe
 *.png
 *.root
-*.cxx
 *.aux
-CORE
-Tools
-Software
 LeptonBabyMaker
-*.txt
 *.log
 *.pcm
-*.list
 submit.*
 condorLog.*

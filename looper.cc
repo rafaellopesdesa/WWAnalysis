@@ -19,6 +19,9 @@
 
 #include "CORE/Tools/goodrun.h"
 #include "CORE/Tools/dorky/dorky.h"
+//#include "CORE/Tools/jetcorr/Utilities.icc"
+//#include "CORE/Tools/jetcorr/JetCorrectionUncertainty.icc"
+//#include "CORE/Tools/jetcorr/SimpleJetCorrectionUncertainty.icc"
 
 //CMS3
 #include "CORE/CMS3.h"
@@ -50,46 +53,51 @@ int looper::ScanChain(TChain* chain, TString prefix, TString suffix, TString wha
 
   std::vector<std::string> jetcorr_filenames_pfL1FastJetL2L3;
   FactorizedJetCorrector *jet_corrector_pfL1FastJetL2L3;
+  std::string jetcorr_uncertainty_filename;
 
   std::vector<std::string> jetcorr_filenames_pfL1FastJetL2L3_puppi;
   FactorizedJetCorrector *jet_corrector_pfL1FastJetL2L3_puppi;
+  JetCorrectionUncertainty* jetcorr_uncertainty(0);
 
   jetcorr_filenames_pfL1FastJetL2L3.clear();
   jetcorr_filenames_pfL1FastJetL2L3_puppi.clear();
 
    if (isDataFromFileName) {
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L1FastJet_AK4PFchs.txt");
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L2Relative_AK4PFchs.txt");
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L3Absolute_AK4PFchs.txt");
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L2L3Residual_AK4PFchs.txt");
+     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
+     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2Relative_AK4PFchs.txt");
+     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
+     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
 
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L1FastJet_AK4PFPuppi.txt");
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L2Relative_AK4PFPuppi.txt");
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L3Absolute_AK4PFPuppi.txt");
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L2L3Residual_AK4PFPuppi.txt");
+     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L1FastJet_AK4PFPuppi.txt");
+     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2Relative_AK4PFPuppi.txt");
+     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L3Absolute_AK4PFPuppi.txt");
+     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2L3Residual_AK4PFPuppi.txt");
    } else {
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_MC/Summer15_25nsV5_MC_L1FastJet_AK4PFchs.txt");
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_MC/Summer15_25nsV5_MC_L2Relative_AK4PFchs.txt");
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_MC/Summer15_25nsV5_MC_L3Absolute_AK4PFchs.txt");
+     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt");
+     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt");
+     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L3Absolute_AK4PFchs.txt");
 
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_MC/Summer15_25nsV5_MC_L1FastJet_AK4PFPuppi.txt");
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_MC/Summer15_25nsV5_MC_L2Relative_AK4PFPuppi.txt");
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV5_MC/Summer15_25nsV5_MC_L3Absolute_AK4PFPuppi.txt");
+     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L1FastJet_AK4PFPuppi.txt");
+     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L2Relative_AK4PFPuppi.txt");
+     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L3Absolute_AK4PFPuppi.txt");
    }
+
+  jetcorr_uncertainty_filename = "jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt";
 
   jet_corrector_pfL1FastJetL2L3 = makeJetCorrector(jetcorr_filenames_pfL1FastJetL2L3);
   jet_corrector_pfL1FastJetL2L3_puppi = makeJetCorrector(jetcorr_filenames_pfL1FastJetL2L3_puppi);
+  jetcorr_uncertainty = new JetCorrectionUncertainty(jetcorr_uncertainty_filename);
 
   //Instantiate Babymaker, if making a baby
   babyMaker* bm=0;
-  bm = new babyMaker(jet_corrector_pfL1FastJetL2L3, jet_corrector_pfL1FastJetL2L3_puppi, debug);
+  bm = new babyMaker(jet_corrector_pfL1FastJetL2L3, jet_corrector_pfL1FastJetL2L3_puppi, jetcorr_uncertainty, debug);
   bm->MakeBabyNtuple( Form( "%s%s", prefix.Data(), suffix.Data() ));
 
   //Instantiate MVA for electron ID
   createAndInitMVA("./CORE");
 
   // Apply DQ
-  const char* json_file = "DQ/Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON_CMS3.txt"; //  1280.23 /pb
+  const char* json_file = "DQ/Cert_246908-260426_13TeV_PromptReco_Collisions15_25ns_JSON_CMS3.txt"; //  1.65 /fb
   set_goodrun_file(json_file);
 
   // Apply pileup reweight
@@ -132,8 +140,8 @@ int looper::ScanChain(TChain* chain, TString prefix, TString suffix, TString wha
 	if (!goodrun(cms3.evt_run(), cms3.evt_lumiBlock())) {
 	  continue;
 	}
-	DorkyEventIdentifier id(cms3.evt_run(), cms3.evt_event(), cms3.evt_lumiBlock());
-	if (is_duplicate(id)) continue;
+	//	DorkyEventIdentifier id(cms3.evt_run(), cms3.evt_event(), cms3.evt_lumiBlock());
+	//	if (is_duplicate(id)) continue;
       }
 
       //If making a baby, init the baby ntuple
@@ -151,6 +159,7 @@ int looper::ScanChain(TChain* chain, TString prefix, TString suffix, TString wha
   bm->CloseBabyNtuple();
   if (jet_corrector_pfL1FastJetL2L3) delete jet_corrector_pfL1FastJetL2L3;
   if (jet_corrector_pfL1FastJetL2L3_puppi) delete jet_corrector_pfL1FastJetL2L3_puppi;
+  if (jetcorr_uncertainty) delete jetcorr_uncertainty;
   if (bm) delete bm;
 
   return 0;

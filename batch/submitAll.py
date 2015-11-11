@@ -62,11 +62,6 @@ def main():
                 jobFailures.append(job)
                 continue
             
-            if rootTree.GetEntries() == 0:
-                os.unlink('/hadoop/cms/store/user/rcoelhol/WWbabies/%s_%d_baby.root' % (sampleName, job))
-                jobFailures.append(job)
-                continue
-
             rootFile.Close()
             jobSuccess.append('/hadoop/cms/store/user/rcoelhol/WWbabies/%s_%d_baby.root' % (sampleName, job))
             
@@ -199,6 +194,7 @@ def submitCondor(filesToSubmit):
 #    os.system('voms-proxy-init --voms cms -hours 120')
     for fileName in filesToSubmit:
         os.system('condor_submit %s' % fileName)
+#    print 'submit yourself'
 
 def makeTar():
 

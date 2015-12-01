@@ -972,7 +972,7 @@ void babyMaker::FillMVAInformation() {
 
 void babyMaker::FillSMuInformation() {
 
-  //  nVetoSoftMuons = 0;
+  nVetoSoftMuons = 0;
   for (unsigned int muidx = 0; muidx < mus_p4().size(); muidx++){    
     if (abs(lep1_id) == 13 && ((uint) lep1_idx) == muidx) continue;
     if (abs(lep2_id) == 13 && ((uint) lep2_idx) == muidx) continue;

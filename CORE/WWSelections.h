@@ -88,10 +88,11 @@ int lepMotherID(Lep lep);
 int lepMotherID_inSituFR(Lep lep);
 
 //Jet selection function
- std::pair <vector <Jet>, vector <Jet> > WWJetsCalculator(std::vector<LorentzVector> JetCollection, std::vector<float> UncCollection, bool use_puppi = false);
+ std::pair <vector <Jet>, vector <Jet> > WWJetsCalculator(std::vector<LorentzVector> JetCollection, bool use_puppi = false);
 
 // Calculate generator ht
 float getGenHT(bool is_b_a_jet = true);
+float getWWpT();
 
 //Sorting functions
 bool ptsort (int i,int j);
@@ -143,40 +144,31 @@ private:
 };
 
 struct Jet {
-Jet(int idxx,
-    float __CSVv2,
-    float __CSVsm,
-    float __CSVse,
-    float __CSVtche,
-    float __unc,
-    bool is_puppi) : idx_(idxx), _CSVv2(__CSVv2), _CSVsm(__CSVsm), _CSVse(__CSVse), _CSVtche(__CSVtche), _unc(__unc), _is_puppi(is_puppi) {}
-  LorentzVector p4() { if(_is_puppi) return cms3.pfjets_puppi_p4()[idx_]; else return cms3.pfjets_p4()[idx_]; }
-  LorentzVector p4_varUp() { if(_is_puppi) return cms3.pfjets_puppi_p4()[idx_]*(1+_unc); else return cms3.pfjets_p4()[idx_]*(1+_unc); }
-  LorentzVector p4_varDown() { if(_is_puppi) return cms3.pfjets_puppi_p4()[idx_]*(1-_unc); else return cms3.pfjets_p4()[idx_]*(1-_unc); }
+Jet(int idx,
+    float CSVv2,
+    bool is_puppi) : _idx(idx), _CSVv2(CSVv2), _is_puppi(is_puppi) {}
+  LorentzVector p4() { if(_is_puppi) return cms3.pfjets_puppi_p4()[_idx]; else return cms3.pfjets_p4()[_idx]; }
   float pt() {return p4().pt();}
   float eta() {return p4().eta();}
   float phi() {return p4().phi();}
-  int   mc3_id() { if(_is_puppi) return -1; else return cms3.pfjets_mc3_id()[idx_]; }
-  LorentzVector genjet_p4() { if(_is_puppi) return LorentzVector(0,0,0,0); else return cms3.pfjets_mc_p4()[idx_]; }
-  LorentzVector genps_p4() { if(_is_puppi) return LorentzVector(0,0,0,0); else return cms3.pfjets_mc_gp_p4()[idx_]; }
-  float pileup_jet_id() { if(_is_puppi) return cms3.pfjets_puppi_pileupJetId()[idx_]; else return cms3.pfjets_pileupJetId()[idx_]; }
-  int parton_flavor() { if(_is_puppi) return cms3.pfjets_puppi_partonFlavour()[idx_]; else return cms3.pfjets_partonFlavour()[idx_]; }
-  int hadron_flavor() { if(_is_puppi) return cms3.pfjets_puppi_hadronFlavour()[idx_]; else return cms3.pfjets_hadronFlavour()[idx_]; }
+  int   mc3_id() { if(_is_puppi) return -1; else return cms3.pfjets_mc3_id()[_idx]; }
+  LorentzVector genjet_p4() { if(_is_puppi) return LorentzVector(0,0,0,0); else return cms3.pfjets_mc_p4()[_idx]; }
+  LorentzVector genps_p4() { if(_is_puppi) return LorentzVector(0,0,0,0); else return cms3.pfjets_mc_gp_p4()[_idx]; }
+  float pileup_jet_id() { if(_is_puppi) return cms3.pfjets_puppi_pileupJetId()[_idx]; else return cms3.pfjets_pileupJetId()[_idx]; }
+  int parton_flavor() { if(_is_puppi) return cms3.pfjets_puppi_partonFlavour()[_idx]; else return cms3.pfjets_partonFlavour()[_idx]; }
+  int hadron_flavor() { if(_is_puppi) return cms3.pfjets_puppi_hadronFlavour()[_idx]; else return cms3.pfjets_hadronFlavour()[_idx]; }
   float CSVv2() {return _CSVv2;}
-  float CSVsm() {return _CSVsm;}
-  float CSVse() {return _CSVse;}
-  float CSVtche() {return _CSVtche;}
-  int idx() {return idx_;}
+  int idx() {return _idx;}
 private:
-  int idx_;
-  float _CSVv2,_CSVsm,_CSVse,_CSVtche;
+  int _idx;
+  float _CSVv2;
   float _unc;
   bool _is_puppi;
 };
 
  int convertCMS3tag(TString tagName) ;
- int getHighPtTriggerPrescale(LorentzVector& p4, int& idx, int& id) ;
- int getLowPtTriggerPrescale(LorentzVector& p4, int& idx, int& id) ;
+ int getHighPtTriggerPrescale(int idx1, int id1, int idx2, int id2);
+ int getLowPtTriggerPrescale(LorentzVector& p4, int& idx, int& id);
  void setHLTBranch(const char* pattern, const LorentzVector& p4, int& HLTbranch);
  void setHLTBranch(const char* pattern, bool legMatch, int& HLTbranch);
 

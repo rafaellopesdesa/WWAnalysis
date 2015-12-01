@@ -29,18 +29,9 @@ class looper
   looper() {
     p4_ = new LorentzVector();
   };
-  ~looper() {
-    //delete babyFile_;
-    //delete babyTree_;
-  };
+  ~looper() {};
   
-  int ScanChain ( TChain* chain, TString prefix, TString postfix, TString whatTest = "", int nEvents = -1, double fudge = 1., std::vector<int> evtToDebug = std::vector<int>());
-
-  
-  //void MakeBabyNtuple (const char *);
-  //void InitBabyNtuple ();
-  //void FillBabyNtuple (){babyTree_->Fill();}
-  //void CloseBabyNtuple () { babyFile_->cd();babyTree_->Write();babyFile_->Close();}
+  int ScanChain ( TChain* chain, TString prefix, TString postfix, TString whatTest = "", int nEvents = -1, double fudge = 1., int JECvar = 0, std::vector<int> evtToDebug = std::vector<int>());
   
   void CreateOutputFile(const char * name){
     outf = TFile::Open(name,"RECREATE");
@@ -85,9 +76,6 @@ class looper
   bool makehist;
   bool maketext;
   
-  //ntuple, file
-  //TFile *babyFile_;
-  //TTree *babyTree_;
   TFile *outf;
   
   //baby vars

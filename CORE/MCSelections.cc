@@ -61,6 +61,20 @@ int dumpDocLines(){
   return 0;
 }
 
+bool isFromSUSY(int id, int idx){
+  int mc_id         = abs(id) == 11          ? els_mc_id().at(idx)         : mus_mc_id().at(idx);
+  int mc_motherid   = abs(id) == 11          ? els_mc_motherid().at(idx)   : mus_mc_motherid().at(idx);
+  int mc3_motheridx = abs(id) == 11          ? els_mc3_motheridx().at(idx) : mus_mc3_motheridx().at(idx);
+  int mc_grandmaid  = mc3_motheridx == -9999 ? -9999                       : genps_id_mother().at(mc3_motheridx);
+  //For Leptons
+  if ((abs(mc_id)==11 || abs(mc_id)==13)){
+    if (abs(mc_motherid)==1000024) return true;
+    if (abs(mc_motherid)==15 && abs(mc_grandmaid)==1000024) return true;
+    return false;
+  }
+  return false;
+}
+
 bool isFromW(int id, int idx){
   int mc_id         = abs(id) == 11          ? els_mc_id().at(idx)         : mus_mc_id().at(idx);
   int mc_motherid   = abs(id) == 11          ? els_mc_motherid().at(idx)   : mus_mc_motherid().at(idx);
@@ -356,4 +370,15 @@ bool terminateMotherId(int motherId){
   int id = abs(motherId);
   if (id <= 5 || id == 21 || (id > 100 && id < 1000000)) return true;
   return false;
+}
+
+//________________________________________________________________
+// top pt reweighting from the TOP PAG
+//  https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
+//  using the 8 TeV "All Combined" weights
+float topPtWeight(float pt_top, float pt_tbar) {
+  if (pt_top < 0. || pt_tbar < 0.) return 1.;
+  float weight_top = exp(0.156 - 0.00137 * pt_top);
+  float weight_tbar = exp(0.156 - 0.00137 * pt_tbar);
+  return sqrt( weight_top * weight_tbar );
 }

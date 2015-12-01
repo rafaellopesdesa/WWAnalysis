@@ -13,7 +13,8 @@ int main(int argc, char** argv) {
   ch->AddFileInfoList((TCollection*) fc->GetList());
 
   TString fudgeText(argv[3]);
-  l->ScanChain(ch , argv[2], "baby", "MakeBaby", -1, fudgeText.Atof());
+  TString JECvarText(argv[4]);
+  l->ScanChain(ch , argv[2], "baby", "MakeBaby", -1, fudgeText.Atof(), JECvarText.Atoi());
 
   return 0;
 

@@ -12,6 +12,7 @@
 int  dumpDocLines();
 
 //Parentage functions
+bool isFromSUSY(int id, int idx);
 bool isFromW(int id, int idx);
 bool isFromZ(int id, int idx);
 bool isFromB(int id, int idx);
@@ -26,5 +27,8 @@ int getSourceId(int genpIdx);
 bool useSourceId(int sourceId);
 bool terminateSourceId(int motherId);
 bool terminateMotherId(int motherId);
+
+// top pt reweighting
+float topPtWeight(float pt_top, float pt_tbar);
 
 #endif

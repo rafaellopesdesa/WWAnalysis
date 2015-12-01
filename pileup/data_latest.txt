@@ -1,1 +1,1 @@
-../DQ/Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON.txt
+../DQ/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt

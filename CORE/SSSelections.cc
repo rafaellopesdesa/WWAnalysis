@@ -356,10 +356,9 @@ bool isGoodLeptonNoIso(int id, int idx){
   return false;
 }
 
-bool isInSituFRLepton(int id, int idx, bool expt){
+bool isInSituFRLepton(int id, int idx){
   if (abs(id) == 11){
-    if (!expt && !electronID(idx, SS_medium_noip_v5) && !electronID(idx, SS_medium_v5)) return false;
-    if (expt && !electronID(idx, SS_medium_looseMVA_noip_v5) && !electronID(idx, SS_medium_v5)) return false;
+    if (!electronID(idx, SS_medium_noip_v5) && !electronID(idx, SS_medium_v5)) return false;
   }
   if (abs(id) == 13){
     if (!muonID(idx, SS_fo_noiso_noip_v5) && !muonID(idx, SS_fo_noiso_v5)) return false;
@@ -541,6 +540,110 @@ int signalRegion(int njets, int nbtags, float met, float ht, float mt_min, int i
   return -1;
 }
 
+int signalRegionRed(int njets, int nbtags, float met, float ht, float mt_min, int id1, int id2, float lep1pt, float lep2pt){
+  
+  //Calculate lep_pt
+  anal_type_t lep_pt = analysisCategory(id1, id2, lep1pt, lep2pt); 
+
+  //Reject events out of kinematic acceptance
+  if (met < 50) return -1; 
+  if (njets < 2) return -1; 
+  if (lep_pt != LowLow && met > 500 && ht < 300) return -1; 
+
+  //High-high
+  if (lep_pt == HighHigh){
+    if (met >= 300) return 18;
+    if (ht >= 1125) return 19; 
+    if (ht < 300){
+      if (nbtags == 0 && mt_min < 120 && met < 200 && njets <= 4) return 1; 
+      if (nbtags == 0) return 3; 
+      if (nbtags == 1 && mt_min < 120 && met < 200 && njets <= 4) return 6; 
+      if (nbtags == 1) return 8; 
+      if (nbtags == 2 && mt_min < 120 && met < 200 && njets <= 4) return 11; 
+      if (nbtags == 2) return 13; 
+      if (nbtags >= 3 && mt_min < 120 && met < 200) return 16; 
+      if (nbtags >= 3 && mt_min < 120 && met >= 200) return 16; 
+      if (nbtags >= 3) return 16;
+    }
+    if (ht >= 300 && ht < 1125){
+      if (nbtags == 0){
+        if (mt_min < 120 && met < 200 && njets <= 4) return 2; 
+        if (mt_min < 120 && met < 200 && njets > 4) return 4; 
+        return 8;
+      } 
+      if (nbtags == 1){
+        if (mt_min < 120 && met < 200 && njets <= 4) return 7; 
+        if (mt_min < 120 && met < 200 && njets > 4) return 9; 
+        return 10;
+      } 
+      if (nbtags == 2){
+        if (mt_min < 120 && met < 200 && njets <= 4) return 12; 
+        if (mt_min < 120 && met < 200 && njets > 4) return 14; 
+        return 15;
+      } 
+      if (nbtags >= 3){
+        if (mt_min < 120 && met < 200) return 17;
+        if (mt_min < 120 && met >= 200) return 17;
+        if (mt_min >= 120) return 17;
+      }
+    }
+  }
+  
+  //High-Low
+  if (lep_pt == HighLow){
+    if (met >= 300) return 17;
+    if (ht >= 1125) return 18;
+    if (ht < 300){ 
+      if (nbtags == 0 && met < 200 && njets <= 4) return 1; 
+      if (mt_min < 120 && nbtags == 0) return 3;
+      if (mt_min < 120 && nbtags == 1 && met < 200 && njets <= 4) return 5; 
+      if (mt_min < 120 && nbtags == 1) return 7;
+      if (mt_min < 120 && nbtags == 2 && met < 200 && njets <= 4) return 9; 
+      if (mt_min < 120 && nbtags == 2) return 11;
+      if (mt_min < 120 && nbtags >= 3 && met < 200) return 13; 
+      if (mt_min < 120 && nbtags >= 3) return 13;
+      if (mt_min >= 120) return 15; 
+    }  
+    if (ht >= 300){
+      if (nbtags == 0 && mt_min < 120 && met < 200 && njets <= 4) return 2; 
+      if (nbtags == 0 && mt_min < 120 && met < 200 && njets > 4) return 4; 
+      if (nbtags == 0 && mt_min < 120 && met < 500 && njets <= 4) return 4; 
+      if (nbtags == 0 && mt_min < 120 && met < 500 && njets > 4) return 4; 
+      if (nbtags == 1 && mt_min < 120 && met < 200 && njets <= 4) return 6; 
+      if (nbtags == 1 && mt_min < 120 && met < 200 && njets > 4) return 8; 
+      if (nbtags == 1 && mt_min < 120 && met < 500 && njets <= 4) return 8; 
+      if (nbtags == 1 && mt_min < 120 && met < 500 && njets > 4) return 8; 
+      if (nbtags == 2 && mt_min < 120 && met < 200 && njets <= 4) return 10; 
+      if (nbtags == 2 && mt_min < 120 && met < 200 && njets > 4) return 12; 
+      if (nbtags == 2 && mt_min < 120 && met < 500 && njets <= 4) return 12; 
+      if (nbtags == 2 && mt_min < 120 && met < 500 && njets > 4) return 12; 
+      if (nbtags >= 3 && mt_min < 120 && met < 200) return 14; 
+      if (nbtags >= 3 && mt_min < 120 && met >= 200) return 14; 
+      if (mt_min >= 120) return 16;
+    }
+  }
+
+  //Low-Low
+  if (lep_pt == LowLow){
+    if (ht < 300) return -1; 
+    if (mt_min > 120) return 3; 
+    if (nbtags == 0 && met < 200) return 1;
+    if (nbtags == 0 && met >= 200) return 2;
+    if (nbtags == 1 && met < 200) return 1;
+    if (nbtags == 1 && met >= 200) return 2;
+    if (nbtags == 2 && met < 200) return 3;
+    if (nbtags == 2 && met >= 200) return 3;
+    if (nbtags >= 3) return 3;
+  }
+
+  //Otherwise undefined
+  cout << "WARNING: SR UNDEFINED (should never get here)" << endl;
+  cout << "  --> lepton pts are: " << lep1pt << " " << lep2pt << endl;
+  cout << "  --> ht & met are: " << ht << " " << met << endl;
+  cout << "  --> njets & nbtags: " << njets << " " << nbtags << endl;
+  return -1;
+}
+
 bool isGoodVetoElectronNoIso(unsigned int elidx){
   if (els_p4().at(elidx).pt() < 7.) return false;
   if (!electronID(elidx, SS_veto_noiso_v5)) return false;
@@ -616,7 +719,7 @@ bool isGoodMuon(unsigned int muidx){
 int lepMotherID(Lep lep){
   if (abs(lep.pdgId()) != abs(lep.mc_id())) return 0; 
   if (tas::evt_isRealData()) return 1;
-  else if (isFromZ(lep.pdgId(),lep.idx()) || isFromW(lep.pdgId(),lep.idx())){
+  else if (isFromSUSY(lep.pdgId(),lep.idx()) ||isFromZ(lep.pdgId(),lep.idx()) || isFromW(lep.pdgId(),lep.idx())){
     if (sgn(lep.pdgId()) == sgn(lep.mc_id())) return 1;
     else return 2;
   }
@@ -625,7 +728,7 @@ int lepMotherID(Lep lep){
   return 0;
 }
 
-int isGoodHyp(int iHyp, bool expt, bool verbose){
+int isGoodHyp(int iHyp, bool verbose){
 
   //Bunch o' variables
   float pt_ll = tas::hyp_ll_p4().at(iHyp).pt(); 
@@ -642,8 +745,8 @@ int isGoodHyp(int iHyp, bool expt, bool verbose){
   bool passed_id_numer_lt = isGoodLepton(id_lt, idx_lt);
   bool passed_id_denom_ll = isDenominatorLepton(id_ll, idx_ll);
   bool passed_id_denom_lt = isDenominatorLepton(id_lt, idx_lt);
-  bool passed_id_inSituFR_ll = isInSituFRLepton(id_ll, idx_ll, expt);
-  bool passed_id_inSituFR_lt = isInSituFRLepton(id_lt, idx_lt, expt);
+  bool passed_id_inSituFR_ll = isInSituFRLepton(id_ll, idx_ll);
+  bool passed_id_inSituFR_lt = isInSituFRLepton(id_lt, idx_lt);
   bool extraZ = makesExtraZ(iHyp).result;
   bool extraGammaStar = makesExtraGammaStar(iHyp);
 
@@ -695,7 +798,7 @@ int isGoodHyp(int iHyp, bool expt, bool verbose){
   return 0; //non-highpass OS
 }
 
-hyp_result_t chooseBestHyp(bool expt, bool verbose){
+hyp_result_t chooseBestHyp(bool verbose){
 
   //List of good hyps
   vector <int> good_hyps_ss; //same sign, tight tight
@@ -705,7 +808,7 @@ hyp_result_t chooseBestHyp(bool expt, bool verbose){
   vector <int> good_hyps_os; //opposite sign, tight tight
   vector <int> good_hyps_zv; //same sign, tight tight, fail Z veto
   for (unsigned int i = 0; i < tas::hyp_type().size(); i++){
-    int good_hyp_result = isGoodHyp(i, expt, verbose);
+    int good_hyp_result = isGoodHyp(i, verbose);
     if (good_hyp_result == 3) good_hyps_ss.push_back(i); 
     else if (good_hyp_result == 2) good_hyps_sf.push_back(i); 
     else if (good_hyp_result == 1) good_hyps_df.push_back(i); 

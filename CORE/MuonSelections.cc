@@ -570,6 +570,15 @@ bool muonID(unsigned int muIdx, id_level_t id_level){
        return true;
        break;
 
+    case(STOP_medium_v3):
+      if (!isLooseMuonPOG(muIdx) ) return false;
+      if (!isMediumMuonPOG(muIdx)) return false;
+      if (fabs(mus_dxyPV()             .at(muIdx)) >  0.02  ) return false;
+      if (fabs(mus_dzPV()              .at(muIdx)) >  0.1   ) return false;
+      if (muMiniRelIsoCMS3_EA(muIdx,1)                   > 0.1) return false;
+       return true;
+       break;
+
    /////////////////////
    /// STOP tight///
    /////////////////////

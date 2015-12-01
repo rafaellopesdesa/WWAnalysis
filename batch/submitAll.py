@@ -23,6 +23,9 @@ def main():
 
         print 20*'-'
         print 'Doing', sampleName
+        if os.path.exists('/hadoop/cms/store/user/rcoelhol/WWbabies/merged/%s.root' % sampleName):
+            print 'Sample %s already merged... skipping!' % sampleName
+            continue
         fileCount = 0
         try:
             for file in os.listdir(sampleInfo[0]):
@@ -68,19 +71,18 @@ def main():
         print 'Found', len(jobFailures), 'files missing'
         if len(jobFailures) == numJobs:
             filesToSubmit.append('submit.%s' % sampleName)
-            writeCondor('submit.%s' % sampleName, sampleName, numJobs, sampleInfo[1])
+            writeCondor('submit.%s' % sampleName, sampleName, numJobs, sampleInfo[1], sampleInfo[2])
         elif len(jobFailures) > 0:
             localtime   = time.localtime()
             timeString  = time.strftime("%Y%m%d%H%M%S", localtime)
             filesToSubmit.append('submit.%s.recover.%s' % (sampleName, timeString))
-            writeRecovery('submit.%s.recover.%s' % (sampleName, timeString), sampleName, sampleInfo[1], jobFailures)
+            writeRecovery('submit.%s.recover.%s' % (sampleName, timeString), sampleName, sampleInfo[1], sampleInfo[2], jobFailures)
         else:
             mergeFiles(jobSuccess, sampleName)
             
     print 'Making tar file and submitting'
     makeTar()
     submitCondor(filesToSubmit)
-
 
 def mergeFiles(listOfFiles, sampleName):
 
@@ -105,7 +107,7 @@ def mergeFiles(listOfFiles, sampleName):
         shutil.copy('/nfs-5/users/rclsa/WW_2015/CMSSW_7_4_12/src/WWAnalysis/batch/merged/%s.root' % sampleName, '/hadoop/cms/store/user/rcoelhol/WWbabies/merged/%s.root' % sampleName)
         hasCopied = filecmp.cmp('/nfs-5/users/rclsa/WW_2015/CMSSW_7_4_12/src/WWAnalysis/batch/merged/%s.root' % sampleName, '/hadoop/cms/store/user/rcoelhol/WWbabies/merged/%s.root' % sampleName)
     os.unlink('/nfs-5/users/rclsa/WW_2015/CMSSW_7_4_12/src/WWAnalysis/batch/merged/%s.root' % sampleName)
-    
+
 def getFilesPerJob():
 
     retval = -1
@@ -131,14 +133,16 @@ def readList(fileName):
             continue
         info = sample.strip().split()
         if len(info) == 2:
-            retval[info[0]] = [info[1], 1.0]
+            retval[info[0]] = [info[1], 1.0, 0]
         elif len(info) == 3:
-            retval[info[0]] = [info[1], float(info[2])]
+            retval[info[0]] = [info[1], float(info[2]), 0]
+        elif len(info) == 4:
+            retval[info[0]] = [info[1], float(info[2]), int(info[3])]
     listFile.close()
 
     return retval
 
-def writeCondor(fileName, sampleName, numJobs, fudgeFactor):
+def writeCondor(fileName, sampleName, numJobs, fudgeFactor, JECvar):
 
     configFile = open(fileName, 'w')
 
@@ -158,12 +162,12 @@ def writeCondor(fileName, sampleName, numJobs, fudgeFactor):
     configFile.write('Transfer_executable = True\n')
     configFile.write('getenv = True\n')
 
-    configFile.write('arguments = $(Process) %s %f\n' % (sampleName, fudgeFactor))
+    configFile.write('arguments = $(Process) %s %f %d\n' % (sampleName, fudgeFactor, JECvar))
     configFile.write('Queue %d\n' % numJobs)
 
     configFile.close()
 
-def writeRecovery(fileName, sampleName, fudgeFactor, listOfFailures):
+def writeRecovery(fileName, sampleName, fudgeFactor, JECvar, listOfFailures):
 
     configFile = open(fileName, 'w')
 
@@ -184,7 +188,7 @@ def writeRecovery(fileName, sampleName, fudgeFactor, listOfFailures):
     configFile.write('getenv = True\n')
 
     for jobNumber in listOfFailures:
-        configFile.write('arguments = %d %s %f\n' % (jobNumber, sampleName, fudgeFactor))
+        configFile.write('arguments = %d %s %f %d\n' % (jobNumber, sampleName, fudgeFactor, JECvar))
         configFile.write('Queue 1\n')
 
     configFile.close()

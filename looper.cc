@@ -19,9 +19,6 @@
 
 #include "CORE/Tools/goodrun.h"
 #include "CORE/Tools/dorky/dorky.h"
-//#include "CORE/Tools/jetcorr/Utilities.icc"
-//#include "CORE/Tools/jetcorr/JetCorrectionUncertainty.icc"
-//#include "CORE/Tools/jetcorr/SimpleJetCorrectionUncertainty.icc"
 
 //CMS3
 #include "CORE/CMS3.h"
@@ -31,7 +28,7 @@ using namespace std;
 using namespace WWAnalysis;
 using namespace duplicate_removal;
 
-int looper::ScanChain(TChain* chain, TString prefix, TString suffix, TString whatTest, int nEvents, double fudge, vector<int> evtToDebug){
+int looper::ScanChain(TChain* chain, TString prefix, TString suffix, TString whatTest, int nEvents, double fudge, int JECvar, vector<int> evtToDebug){
 
   //Don't change these parameters by hand, please set them from main.cc
   makebaby       = 1;
@@ -50,59 +47,15 @@ int looper::ScanChain(TChain* chain, TString prefix, TString suffix, TString wha
 
   //Determine suffix
   if (suffix!="") suffix = "_"+suffix;
-
-  std::vector<std::string> jetcorr_filenames_pfL1FastJetL2L3;
-  FactorizedJetCorrector *jet_corrector_pfL1FastJetL2L3;
-  std::string jetcorr_uncertainty_filename;
-
-  std::vector<std::string> jetcorr_filenames_pfL1FastJetL2L3_puppi;
-  FactorizedJetCorrector *jet_corrector_pfL1FastJetL2L3_puppi;
-  JetCorrectionUncertainty* jetcorr_uncertainty(0);
-
-  jetcorr_filenames_pfL1FastJetL2L3.clear();
-  jetcorr_filenames_pfL1FastJetL2L3_puppi.clear();
-
-   if (isDataFromFileName) {
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2Relative_AK4PFchs.txt");
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
-
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L1FastJet_AK4PFPuppi.txt");
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2Relative_AK4PFPuppi.txt");
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L3Absolute_AK4PFPuppi.txt");
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2L3Residual_AK4PFPuppi.txt");
-   } else {
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt");
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt");
-     jetcorr_filenames_pfL1FastJetL2L3.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L3Absolute_AK4PFchs.txt");
-
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L1FastJet_AK4PFPuppi.txt");
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L2Relative_AK4PFPuppi.txt");
-     jetcorr_filenames_pfL1FastJetL2L3_puppi.push_back  ("jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L3Absolute_AK4PFPuppi.txt");
-   }
-
-  jetcorr_uncertainty_filename = "jetCorrections/JECDatabase/textFiles/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt";
-
-  jet_corrector_pfL1FastJetL2L3 = makeJetCorrector(jetcorr_filenames_pfL1FastJetL2L3);
-  jet_corrector_pfL1FastJetL2L3_puppi = makeJetCorrector(jetcorr_filenames_pfL1FastJetL2L3_puppi);
-  jetcorr_uncertainty = new JetCorrectionUncertainty(jetcorr_uncertainty_filename);
-
+			
   //Instantiate Babymaker, if making a baby
   babyMaker* bm=0;
-  bm = new babyMaker(jet_corrector_pfL1FastJetL2L3, jet_corrector_pfL1FastJetL2L3_puppi, jetcorr_uncertainty, debug);
+  bm = new babyMaker(isDataFromFileName, debug);
   bm->MakeBabyNtuple( Form( "%s%s", prefix.Data(), suffix.Data() ));
 
-  //Instantiate MVA for electron ID
-  createAndInitMVA("./CORE");
-
   // Apply DQ
-  const char* json_file = "DQ/Cert_246908-260426_13TeV_PromptReco_Collisions15_25ns_JSON_CMS3.txt"; //  1.65 /fb
+  const char* json_file = "DQ/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_CMS3.txt"; // 2.11 /fb
   set_goodrun_file(json_file);
-
-  // Apply pileup reweight
-  const char* scalePileup_file = "pileup/MyRatioPileupHistogram.root"; //  594.65/pb
-  bm->SetPileupHist(scalePileup_file);
 
   //Set up the file loop
   if(nEvents == -1) nEvents = chain->GetEntries();
@@ -134,19 +87,17 @@ int looper::ScanChain(TChain* chain, TString prefix, TString suffix, TString wha
       //Progress Bar
       nEventsTotal++;
       CMS3::progress(nEventsTotal, nEventsChain);
-
-        // DQ
+      
+      // DQ
       if (cms3.evt_isRealData()) {
 	if (!goodrun(cms3.evt_run(), cms3.evt_lumiBlock())) {
 	  continue;
 	}
-	//	DorkyEventIdentifier id(cms3.evt_run(), cms3.evt_event(), cms3.evt_lumiBlock());
-	//	if (is_duplicate(id)) continue;
       }
 
       //If making a baby, init the baby ntuple
       bm->InitBabyNtuple();
-      bm->ProcessBaby(currentFile->GetTitle(), fudge);
+      bm->ProcessBaby(currentFile->GetTitle(), fudge, JECvar);
 
     }//event loop
 
@@ -157,9 +108,6 @@ int looper::ScanChain(TChain* chain, TString prefix, TString suffix, TString wha
   if ( nEventsChain != nEventsTotal ) std::cout << "ERROR: number of events from files is not equal to total number of events" << std::endl;
 
   bm->CloseBabyNtuple();
-  if (jet_corrector_pfL1FastJetL2L3) delete jet_corrector_pfL1FastJetL2L3;
-  if (jet_corrector_pfL1FastJetL2L3_puppi) delete jet_corrector_pfL1FastJetL2L3_puppi;
-  if (jetcorr_uncertainty) delete jetcorr_uncertainty;
   if (bm) delete bm;
 
   return 0;
